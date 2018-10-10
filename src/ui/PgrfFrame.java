@@ -3,10 +3,7 @@ import utils.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +17,9 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
     private JPanel panel; // musime pridat panel, protoze to nevykreslovalo
     private Renderer renderer;
     private int coorX, coorY;
+    private  int clicX = 300, clicY = 300;
+    private  int count = 3;
+
 
     public static void main(String... args) {
         PgrfFrame pgrfFrame = new PgrfFrame();
@@ -42,7 +42,27 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                clicX = e.getX();
+                clicY = e.getY();
                 super.mouseClicked(e);
+            }
+        });
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode()==KeyEvent.VK_UP)//sipka nahoru
+                {
+                    count++;
+                }
+                if(e.getKeyCode()==KeyEvent.VK_DOWN)//sipka dolu
+                {
+                    if(count>3)count--;
+                }
+                if(e.getKeyCode()==KeyEvent.VK_ADD)//plus na num klavesnici
+                {
+
+                }
+                super.keyReleased(e);
             }
         });
 
@@ -65,7 +85,8 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
     private void draw(){
         img.getGraphics().fillRect(0,0,img.getWidth(),img.getHeight()); // prideleni pozadi
 
-        renderer.lineDDA(300,300, coorX, coorY);
+        renderer.lineDDA(clicX,clicY, coorX, coorY);
+        renderer.polygon(clicX,clicY,coorX,coorY,count);
 
 
         panel.getGraphics().drawImage(img, 0,0,img.getWidth(), img.getHeight(), null); // zde ji to vykresli
